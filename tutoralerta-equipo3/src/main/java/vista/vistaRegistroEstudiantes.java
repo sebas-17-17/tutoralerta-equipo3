@@ -1,21 +1,41 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
+
 package vista;
 
-/**
- *
- * @author jm533
- */
+import controlador.ControladorEstudiante;
+
+
 public class vistaRegistroEstudiantes extends javax.swing.JFrame {
     
-    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(vistaRegistroEstudiantes.class.getName());
+    private static final java.util.logging.Logger logger 
+            = java.util.logging.Logger.getLogger(vistaRegistroEstudiantes.class.getName());
 
-    /**
-     * Creates new form vistaRegistroEstudiantes
-     */
+    private final ControladorEstudiante controlador;
+    
     public vistaRegistroEstudiantes() {
+        this(new ControladorEstudiante());
+        this.controlador.cargarDatosIniciales(
+            new lectura.LectorEstudiantesCsv(java.nio.file.Path.of("datos", "recursos", "estudiantes.csv"))
+        );
+        actualizarTabla();
+    }
+    
+    public void actualizarTabla() {
+        javax.swing.table.DefaultTableModel modeloTabla = 
+            (javax.swing.table.DefaultTableModel) tblEstudiantes.getModel();
+        modeloTabla.setRowCount(0); 
+
+        for (modelo.Estudiante est : controlador.getListaEstudiantes()) {
+            modeloTabla.addRow(new Object[]{
+                est.cedula(),
+                est.nombres(),
+                est.apellidos(),
+                est.correo()
+            });
+        }
+    }
+    
+    public vistaRegistroEstudiantes(ControladorEstudiante controlador) {
+        this.controlador = controlador;
         initComponents();
         this.getContentPane().setBackground(java.awt.Color.WHITE);
         this.setLocationRelativeTo(null);
@@ -25,16 +45,16 @@ public class vistaRegistroEstudiantes extends javax.swing.JFrame {
         tblEstudiantes.getTableHeader().setFont(new java.awt.Font("Segoe UI", java.awt.Font.BOLD, 13));
         
         tblEstudiantes.getTableHeader().setDefaultRenderer(new javax.swing.table.DefaultTableCellRenderer() {
-        @Override
-        public java.awt.Component getTableCellRendererComponent(javax.swing.JTable t, Object v, boolean s, boolean f, int r, int c) {
-            javax.swing.JLabel l = (javax.swing.JLabel) super.getTableCellRendererComponent(t, v, s, f, r, c);
-            l.setBackground(new java.awt.Color(30, 41, 59));
-            l.setForeground(java.awt.Color.WHITE);
-            l.setFont(new java.awt.Font("Segoe UI", java.awt.Font.BOLD, 13));
-            l.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-            return l;
-        }
-    });
+            @Override
+            public java.awt.Component getTableCellRendererComponent(javax.swing.JTable t, Object v, boolean s, boolean f, int r, int c) {
+                javax.swing.JLabel l = (javax.swing.JLabel) super.getTableCellRendererComponent(t, v, s, f, r, c);
+                l.setBackground(new java.awt.Color(30, 41, 59));
+                l.setForeground(java.awt.Color.WHITE);
+                l.setFont(new java.awt.Font("Segoe UI", java.awt.Font.BOLD, 13));
+                l.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+                return l;
+            }
+        });
     }
 
     /**
@@ -333,12 +353,47 @@ public class vistaRegistroEstudiantes extends javax.swing.JFrame {
         txtApellidos.getText().trim().isEmpty() || 
         txtCorreo.getText().trim().isEmpty()) {
         
+    // Detiene el proceso si falta algún campo  
         javax.swing.JOptionPane.showMessageDialog(this, 
             "Error: Hay campos vacíos. Por favor, complete todos los datos.", 
             "Campos obligatorios", 
             javax.swing.JOptionPane.WARNING_MESSAGE);
-        return; // Detiene el proceso si falta algún campo
+        return; 
     }
+    
+    String cedula = txtCedula.getText().trim();
+    String nombres = txtNombres.getText().trim();
+    String apellidos = txtApellidos.getText().trim();
+    String correo = txtCorreo.getText().trim();
+    
+    // 2. Validar que la cédula tenga exactamente 10 dígitos numéricos 
+        if (!controlador.esCedulaValida(cedula)) {
+            javax.swing.JOptionPane.showMessageDialog(this, 
+                "Error: La cédula debe tener exactamente 10 dígitos numéricos.", 
+                "Cédula inválida", 
+                javax.swing.JOptionPane.WARNING_MESSAGE);
+            txtCedula.requestFocus();
+            return;
+        }
+        
+    // 3. Validar que la cédula no exista previamente 
+        if (controlador.existeCedula(cedula)) {
+            javax.swing.JOptionPane.showMessageDialog(this, 
+                "Error: Ya existe un estudiante registrado con la cédula " + cedula + ".", 
+                "Cédula duplicada", 
+                javax.swing.JOptionPane.WARNING_MESSAGE);
+            txtCedula.requestFocus();
+            return;
+        } 
+        
+        // Agregar el estudiante validado a la lista en memoria del controlador
+        controlador.agregarEstudiante(new modelo.Estudiante(cedula, nombres, apellidos, correo));
+        actualizarTabla();
+        
+        javax.swing.JOptionPane.showMessageDialog(this, 
+            "Datos válidos. Estudiante listo para guardarse.", 
+            "Validación exitosa", 
+            javax.swing.JOptionPane.INFORMATION_MESSAGE);
     }//GEN-LAST:event_btnGuardarActionPerformed
 
     private void txtCorreoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCorreoActionPerformed
