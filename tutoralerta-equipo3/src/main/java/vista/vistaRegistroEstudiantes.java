@@ -327,7 +327,18 @@ public class vistaRegistroEstudiantes extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
-        // TODO add your handling code here:
+    // 1. Validar que ninguno de los campos esté vacío
+    if (txtCedula.getText().trim().isEmpty() || 
+        txtNombres.getText().trim().isEmpty() || 
+        txtApellidos.getText().trim().isEmpty() || 
+        txtCorreo.getText().trim().isEmpty()) {
+        
+        javax.swing.JOptionPane.showMessageDialog(this, 
+            "Error: Hay campos vacíos. Por favor, complete todos los datos.", 
+            "Campos obligatorios", 
+            javax.swing.JOptionPane.WARNING_MESSAGE);
+        return; // Detiene el proceso si falta algún campo
+    }
     }//GEN-LAST:event_btnGuardarActionPerformed
 
     private void txtCorreoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCorreoActionPerformed
