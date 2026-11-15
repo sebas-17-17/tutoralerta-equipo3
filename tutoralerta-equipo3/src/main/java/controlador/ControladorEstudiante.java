@@ -41,6 +41,7 @@ public class ControladorEstudiante {
 
     public void agregarEstudiante(Estudiante estudiante) {
         listaEstudiantes.add(estudiante);
+        guardarEnCsv();
     }
     
     //Método para actualizar los datos de un estudiante existente (excepto la cédula)
@@ -58,8 +59,11 @@ public class ControladorEstudiante {
     }
 
     public void guardarEnCsv() {
-        String rutaArchivo = "datos/recursos/estudiantes.csv";
+        String rutaArchivo = new File("estudiantes.csv").exists()
+        ? "estudiantes.csv"
+        : "datos/recursos/estudiantes.csv";
         try (PrintWriter pw = new PrintWriter(new File(rutaArchivo))) {
+            pw.println("cedula;nombres;apellidos;correo");
             for (Estudiante e : listaEstudiantes) {
                 pw.println(e.cedula() + "," + e.nombres() + "," + e.apellidos() + "," + e.correo());
             }

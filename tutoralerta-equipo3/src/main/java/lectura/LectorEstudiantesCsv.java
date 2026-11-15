@@ -30,9 +30,9 @@ public class LectorEstudiantesCsv implements FuenteDatos<Estudiante> {
         try {
             List<String> lineas = Files.readAllLines(rutaArchivo);
 
-            for (int cabecera = 1; cabecera < lineas.size(); cabecera++) {
+            for (int cabecera = 0; cabecera < lineas.size(); cabecera++) {
                 String linea = lineas.get(cabecera).trim();
-                if (linea.isEmpty()) {
+                if (linea.isEmpty() || (cabecera == 0 && linea.toLowerCase().startsWith("cedula"))) {
                     continue;
                 }
 

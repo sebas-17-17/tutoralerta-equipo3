@@ -37,6 +37,8 @@ public class vistaRegistroEstudiantes extends javax.swing.JFrame {
     public vistaRegistroEstudiantes(ControladorEstudiante controlador) {
         this.controlador = controlador;
         initComponents();
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        btnVolver.addActionListener(e -> this.dispose());
         this.getContentPane().setBackground(java.awt.Color.WHITE);
         this.setLocationRelativeTo(null);
         tblEstudiantes.setFillsViewportHeight(true); 
@@ -55,6 +57,7 @@ public class vistaRegistroEstudiantes extends javax.swing.JFrame {
                 return l;
             }
         });
+        actualizarTabla();
     }
 
     /**

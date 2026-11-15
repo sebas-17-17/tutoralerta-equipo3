@@ -22,24 +22,31 @@ public class vistaMenuPrincipal extends javax.swing.JFrame {
     public JButton btnAsistencia;
     public JButton btnNotas;
     
-    
+    private final ControladorEstudiante controlador;
 
-    /**
-     * Creates new form vistaMenuPrincipal
-     */
-    private final ControladorEstudiante controlador = new ControladorEstudiante();
     public vistaMenuPrincipal() {
+        this(new ControladorEstudiante());
+    }
+
+    public vistaMenuPrincipal(ControladorEstudiante controlador) {
+        this.controlador = controlador;
         initComponents();
         construirInterfaz();
         configurarEventos();
     }
-    
+
     private void configurarEventos() {
+        btnEstudiantes.addActionListener(e -> {
+            vistaRegistroEstudiantes ventanaEstudiantes = new vistaRegistroEstudiantes(this.controlador);
+            ventanaEstudiantes.setVisible(true);
+        });
+
         btnAsistencia.addActionListener(e -> {
             vistaRegistroAsistencia ventanaAsistencia = new vistaRegistroAsistencia(this.controlador);
             ventanaAsistencia.setVisible(true);
         });
     }
+    
     
     private void construirInterfaz() {
         setTitle("TutorAlerta - Menú Principal");
