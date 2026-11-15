@@ -1,6 +1,7 @@
 
 package vista;
 
+import controlador.ControladorEstudiante;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Cursor;
@@ -26,11 +27,20 @@ public class vistaMenuPrincipal extends javax.swing.JFrame {
     /**
      * Creates new form vistaMenuPrincipal
      */
+    private final ControladorEstudiante controlador = new ControladorEstudiante();
     public vistaMenuPrincipal() {
         initComponents();
         construirInterfaz();
+        configurarEventos();
     }
-
+    
+    private void configurarEventos() {
+        btnAsistencia.addActionListener(e -> {
+            vistaRegistroAsistencia ventanaAsistencia = new vistaRegistroAsistencia(this.controlador);
+            ventanaAsistencia.setVisible(true);
+        });
+    }
+    
     private void construirInterfaz() {
         setTitle("TutorAlerta - Menú Principal");
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
