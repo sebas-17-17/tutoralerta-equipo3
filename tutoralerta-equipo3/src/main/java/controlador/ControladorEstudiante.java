@@ -21,6 +21,21 @@ public class ControladorEstudiante {
     public List<Estudiante> getListaEstudiantes() {
         return listaEstudiantes;
     }
+    
+    public List<Estudiante> ordenPorApellido() {
+        List<Estudiante> ordenados = new ArrayList<>(listaEstudiantes);
+        for (int posActual = 0; posActual < ordenados.size() - 1; posActual++) {
+            for (int posSiguiente = posActual + 1; posSiguiente < ordenados.size(); posSiguiente++) {
+                Estudiante actual = ordenados.get(posActual);
+                Estudiante siguiente = ordenados.get(posSiguiente);
+                if (actual.apellidos().compareToIgnoreCase(siguiente.apellidos()) > 0) {
+                    ordenados.set(posActual, siguiente);
+                    ordenados.set(posSiguiente, actual);
+                }
+            }
+        }
+        return ordenados;
+    }
 
     public void agregarEstudiante(Estudiante estudiante) {
         listaEstudiantes.add(estudiante);

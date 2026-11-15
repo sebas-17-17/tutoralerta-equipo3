@@ -24,7 +24,7 @@ public class vistaRegistroEstudiantes extends javax.swing.JFrame {
             (javax.swing.table.DefaultTableModel) tblEstudiantes.getModel();
         modeloTabla.setRowCount(0); 
 
-        for (modelo.Estudiante est : controlador.getListaEstudiantes()) {
+        for (modelo.Estudiante est : controlador.ordenPorApellido()) {
             modeloTabla.addRow(new Object[]{
                 est.cedula(),
                 est.nombres(),

@@ -27,11 +27,12 @@ public class LectorEstudiantesCsv implements FuenteDatos<Estudiante> {
             return estudiantes;
         }
 
-        try (BufferedReader br = Files.newBufferedReader(rutaArchivo)) {
-            String linea = br.readLine();
+        try {
+            List<String> lineas = Files.readAllLines(rutaArchivo);
 
-            while ((linea = br.readLine()) != null) {
-                if (linea.isBlank()) {
+            for (int cabecera = 1; cabecera < lineas.size(); cabecera++) {
+                String linea = lineas.get(cabecera).trim();
+                if (linea.isEmpty()) {
                     continue;
                 }
 
