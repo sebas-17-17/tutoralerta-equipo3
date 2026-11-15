@@ -1,6 +1,7 @@
 package vista;
 
 import controlador.ControladorEstudiante;
+import controlador.ControladorSesion;
 import java.awt.Color;
 import java.awt.Font;
 import java.time.LocalDate;
@@ -13,14 +14,20 @@ public class vistaRegistroAsistencia extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(vistaRegistroAsistencia.class.getName());
     private final ControladorEstudiante controlador;
+    private final ControladorSesion controladorSesion;
+    
+    
+    
     /**
      * Creates new form vistaRegistroAsistencia
      */
     public vistaRegistroAsistencia() {
         this(new ControladorEstudiante());
     }
+    
     public vistaRegistroAsistencia(ControladorEstudiante controlador) {
         this.controlador = controlador;
+        this.controladorSesion = new ControladorSesion(controlador);
         initComponents();
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setResizable(false);
@@ -28,7 +35,28 @@ public class vistaRegistroAsistencia extends javax.swing.JFrame {
         getContentPane().setBackground(Color.WHITE);
         txtFecha.setText(LocalDate.now().toString());
         configurarEstiloTabla();
+        
+        tblAsistencia.getModel().addTableModelListener(new javax.swing.event.TableModelListener() {
+            @Override
+            public void tableChanged(javax.swing.event.TableModelEvent e) {
+                int row = e.getFirstRow();
+                int col = e.getColumn();
+                
+                if (row >= 0 && (col == 2 || col == 3)) {
+                    DefaultTableModel modelo = (DefaultTableModel) tblAsistencia.getModel();
+                    Boolean valor = (Boolean) modelo.getValueAt(row, col);
+                    
+                    if (Boolean.TRUE.equals(valor)) {
+                        int columnaContraria = (col == 2) ? 3 : 2;
+                        if (Boolean.TRUE.equals(modelo.getValueAt(row, columnaContraria))) {
+                            modelo.setValueAt(false, row, columnaContraria);
+                        }
+                    }
+                }
+            }
+        });
     }
+   
 
     private void configurarEstiloTabla() {
         tblAsistencia.setFillsViewportHeight(true);
@@ -39,17 +67,34 @@ public class vistaRegistroAsistencia extends javax.swing.JFrame {
     }
 
     public void cargarEstudiantesEnTabla() {
+    try {
+        String fechaTexto = txtFecha.getText();
+        List<Object[]> filas = controladorSesion.cargarListaPresentes(fechaTexto);
+
         DefaultTableModel modeloTabla = (DefaultTableModel) tblAsistencia.getModel();
         modeloTabla.setRowCount(0);
-        List<Estudiante> estudiantes = controlador.ordenPorApellido();
-        for (Estudiante est : estudiantes) {
-            modeloTabla.addRow(new Object[]{
-                est.cedula(),
-                est.apellidos() + " " + est.nombres(),
-                false,
-                ""});
+
+        for (Object[] fila : filas) {
+            modeloTabla.addRow(fila);
         }
+
+        if (filas.isEmpty()) {
+            JOptionPane.showMessageDialog(
+                this,
+                "No hay estudiantes registrados para cargar.",
+                "Lista vacía",
+                JOptionPane.INFORMATION_MESSAGE
+            );
+        }
+    } catch (IllegalArgumentException ex) {
+        JOptionPane.showMessageDialog(
+            this,
+            ex.getMessage(),
+            "Fecha inválida",
+            JOptionPane.WARNING_MESSAGE
+        );
     }
+}
 
     /**
      * This method is called from within the constructor to initialize the form.
