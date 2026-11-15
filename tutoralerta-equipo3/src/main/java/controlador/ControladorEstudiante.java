@@ -60,4 +60,18 @@ public class ControladorEstudiante {
         }
         return false;
     }
+    public boolean editarEstudiante(String cedula, String nuevosNombres, String nuevosApellidos, String nuevoCorreo) {
+        if (cedula == null){
+            return false;
+        }
+        for (int i = 0; i < listaEstudiantes.size(); i++){
+            Estudiante actual = listaEstudiantes.get(i);
+            if (actual.cedula().equals(cedula)){
+                Estudiante actualizado =new Estudiante(actual.cedula(), nuevosNombres, nuevosApellidos, nuevoCorreo);
+                listaEstudiantes.set(i, actualizado);
+                return true;
+            }
+        }
+        return false;
+    }
 }

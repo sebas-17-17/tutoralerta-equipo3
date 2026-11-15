@@ -249,10 +249,20 @@ public class vistaRegistroEstudiantes extends javax.swing.JFrame {
         btnEditar.setBackground(new java.awt.Color(13, 148, 136));
         btnEditar.setForeground(new java.awt.Color(255, 255, 255));
         btnEditar.setText("Editar");
+        btnEditar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEditarActionPerformed(evt);
+            }
+        });
 
         btnLimpiar.setBackground(new java.awt.Color(100, 116, 139));
         btnLimpiar.setForeground(new java.awt.Color(255, 255, 255));
         btnLimpiar.setText("Limpiar");
+        btnLimpiar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLimpiarActionPerformed(evt);
+            }
+        });
 
         btnVolver.setBackground(new java.awt.Color(225, 29, 72));
         btnVolver.setForeground(new java.awt.Color(255, 255, 255));
@@ -269,6 +279,11 @@ public class vistaRegistroEstudiantes extends javax.swing.JFrame {
         ));
         tblEstudiantes.setGridColor(new java.awt.Color(226, 232, 240));
         tblEstudiantes.setRowHeight(26);
+        tblEstudiantes.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblEstudiantesMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tblEstudiantes);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -408,6 +423,69 @@ public class vistaRegistroEstudiantes extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_btnGuardar1ActionPerformed
 
+    private void tblEstudiantesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblEstudiantesMouseClicked
+        int filaSeleccionada = tblEstudiantes.getSelectedRow();
+        if (filaSeleccionada >= 0){
+            txtCedula.setText(tblEstudiantes.getValueAt(filaSeleccionada, 0).toString());
+            txtNombres.setText(tblEstudiantes.getValueAt(filaSeleccionada, 1).toString());
+            txtApellidos.setText(tblEstudiantes.getValueAt(filaSeleccionada, 2).toString());
+            txtCorreo.setText(tblEstudiantes.getValueAt(filaSeleccionada, 3).toString());
+            txtCedula.setEditable(false);
+            txtCedula.setBackground(new java.awt.Color(226, 232, 240));
+        }
+    }//GEN-LAST:event_tblEstudiantesMouseClicked
+
+    private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
+        if (txtCedula.isEditable()) {
+    javax.swing.JOptionPane.showMessageDialog(this,
+        "Seleccione primero un estudiante de la tabla para editar.",
+        "Ningún estudiante seleccionado",
+        javax.swing.JOptionPane.WARNING_MESSAGE);
+    return;
+}
+
+String cedula = txtCedula.getText();
+String nombres = txtNombres.getText();
+String apellidos = txtApellidos.getText();
+String correo = txtCorreo.getText();
+
+if (nombres.equals("") || apellidos.equals("") || correo.equals("")) {
+    javax.swing.JOptionPane.showMessageDialog(this,
+        "Error: No puede dejar nombres, apellidos o correo vacíos.",
+        "Campos obligatorios",
+        javax.swing.JOptionPane.WARNING_MESSAGE);
+    return;
+}
+
+boolean editado = controlador.editarEstudiante(cedula, nombres, apellidos, correo);
+        if (editado) {
+            actualizarTabla();
+            limpiarCampos();
+            javax.swing.JOptionPane.showMessageDialog(this,
+                "Estudiante actualizado correctamente.",
+                "Edición exitosa",
+                javax.swing.JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            javax.swing.JOptionPane.showMessageDialog(this,
+                "No se encontró el estudiante con cédula " + cedula + ".",
+                "Error al editar",
+                javax.swing.JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_btnEditarActionPerformed
+
+    private void btnLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimpiarActionPerformed
+        limpiarCampos();
+    }//GEN-LAST:event_btnLimpiarActionPerformed
+    private void limpiarCampos() {
+        txtCedula.setText("");
+        txtNombres.setText("");
+        txtApellidos.setText("");
+        txtCorreo.setText("");
+        txtCedula.setEditable(true);
+        txtCedula.setBackground(java.awt.Color.WHITE);
+        tblEstudiantes.clearSelection();
+        txtCedula.requestFocus();
+    }
     /**
      * @param args the command line arguments
      */
