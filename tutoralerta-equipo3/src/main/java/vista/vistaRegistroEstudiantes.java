@@ -401,14 +401,14 @@ public class vistaRegistroEstudiantes extends javax.swing.JFrame {
             return;
         } 
         
-        // Agregar el estudiante validado a la lista en memoria del controlador
-        controlador.agregarEstudiante(new modelo.Estudiante(cedula, nombres, apellidos, correo));
-        actualizarTabla();
-        
-        javax.swing.JOptionPane.showMessageDialog(this, 
-            "Datos válidos. Estudiante listo para guardarse.", 
-            "Validación exitosa", 
-            javax.swing.JOptionPane.INFORMATION_MESSAGE);
+    // 4. Si la cédula NO existe, se guarda como registro nuevo
+    controlador.agregarEstudiante(new modelo.Estudiante(cedula, nombres, apellidos, correo));
+    actualizarTabla();
+    
+    javax.swing.JOptionPane.showMessageDialog(this, 
+        "¡Estudiante guardado con éxito en el archivo!", 
+        "Operación exitosa", 
+        javax.swing.JOptionPane.INFORMATION_MESSAGE);
     }//GEN-LAST:event_btnGuardarActionPerformed
 
     private void txtCorreoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCorreoActionPerformed
@@ -457,18 +457,18 @@ if (nombres.equals("") || apellidos.equals("") || correo.equals("")) {
     return;
 }
 
-boolean editado = controlador.editarEstudiante(cedula, nombres, apellidos, correo);
-        if (editado) {
+boolean actualizado = controlador.actualizarEstudiante(cedula, nombres, apellidos, correo);
+        if (actualizado) {
             actualizarTabla();
             limpiarCampos();
             javax.swing.JOptionPane.showMessageDialog(this,
-                "Estudiante actualizado correctamente.",
-                "Edición exitosa",
+                "Estudiante actualizado correctamente y guardado en el archivo.",
+                "   Actualizacion exitosa",
                 javax.swing.JOptionPane.INFORMATION_MESSAGE);
         } else {
             javax.swing.JOptionPane.showMessageDialog(this,
                 "No se encontró el estudiante con cédula " + cedula + ".",
-                "Error al editar",
+                "Error al actualizar",
                 javax.swing.JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_btnEditarActionPerformed

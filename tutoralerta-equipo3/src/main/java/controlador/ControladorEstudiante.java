@@ -1,5 +1,7 @@
 
 package controlador;
+import java.io.File;
+import java.io.PrintWriter;
 import lectura.FuenteDatos;
 import modelo.Estudiante;
 import java.util.ArrayList;
@@ -41,6 +43,31 @@ public class ControladorEstudiante {
         listaEstudiantes.add(estudiante);
     }
     
+    //Método para actualizar los datos de un estudiante existente (excepto la cédula)
+    public boolean actualizarEstudiante(String cedula, String nuevoNombre, String nuevoApellido, String nuevoCorreo) {
+        for (int i = 0; i < listaEstudiantes.size(); i++) {
+            Estudiante e = listaEstudiantes.get(i);
+            if (e.cedula().equals(cedula)) {
+                // Reemplaza con los nuevos datos manteniendo la cédula intacta
+                listaEstudiantes.set(i, new Estudiante(cedula, nuevoNombre, nuevoApellido, nuevoCorreo));
+                guardarEnCsv(); // Guarda los cambios en el archivo físico
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void guardarEnCsv() {
+        String rutaArchivo = "datos/recursos/estudiantes.csv";
+        try (PrintWriter pw = new PrintWriter(new File(rutaArchivo))) {
+            for (Estudiante e : listaEstudiantes) {
+                pw.println(e.cedula() + "," + e.nombres() + "," + e.apellidos() + "," + e.correo());
+            }
+        } catch (Exception ex) {
+            javax.swing.JOptionPane.showMessageDialog(null, "Error al guardar en el archivo CSV: " + ex.getMessage());
+        }
+    }
+    
     public boolean esCedulaValida(String cedula) {
         if (cedula == null) {
             return false;
@@ -55,20 +82,6 @@ public class ControladorEstudiante {
         String cedulaLimpia = cedula.trim();
         for (Estudiante e : listaEstudiantes) {
             if (e.cedula().equals(cedulaLimpia)) {
-                return true;
-            }
-        }
-        return false;
-    }
-    public boolean editarEstudiante(String cedula, String nuevosNombres, String nuevosApellidos, String nuevoCorreo) {
-        if (cedula == null){
-            return false;
-        }
-        for (int i = 0; i < listaEstudiantes.size(); i++){
-            Estudiante actual = listaEstudiantes.get(i);
-            if (actual.cedula().equals(cedula)){
-                Estudiante actualizado =new Estudiante(actual.cedula(), nuevosNombres, nuevosApellidos, nuevoCorreo);
-                listaEstudiantes.set(i, actualizado);
                 return true;
             }
         }
