@@ -50,7 +50,11 @@ public class ControladorSesion {
   
     //Carga la lista: Si ya existe un archivo CSV para esa fecha, lo lee
     //Si no existe, carga a todos los estudiantes como presentes por defecto 
-    
+    public boolean existeSesionFecha(String textoFecha) {
+        LocalDate fechaSeleccionada = validarFecha(textoFecha);
+        File archivoDia = new File(obtenerCarpetaAsistencias(), "asistencia_" + fechaSeleccionada + ".csv");
+        return archivoDia.exists();
+    }
     public List<Object[]> cargarListaPresentes(String textoFecha) {
         LocalDate fechaSeleccionada = validarFecha(textoFecha);
         File archivoDia = new File(obtenerCarpetaAsistencias(), "asistencia_" + fechaSeleccionada + ".csv");
