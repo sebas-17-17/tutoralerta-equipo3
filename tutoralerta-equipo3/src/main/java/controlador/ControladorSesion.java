@@ -17,16 +17,23 @@ public class ControladorSesion {
     private final ControladorEstudiante controladorEstudiante;
     private static final String CARPETA_ASISTENCIAS = "asistencias"; // Se creará dentro de dist/ al lado del jar
 
-    public ControladorSesion() {
-        this(new ControladorEstudiante());
-    }
-
     public ControladorSesion(ControladorEstudiante controladorEstudiante) {
         this.controladorEstudiante = controladorEstudiante;
+        
+        // Verificamos si estamos corriendo dentro de "dist" o si debemos asegurar la ruta local
         File directorio = new File(CARPETA_ASISTENCIAS);
         if (!directorio.exists()) {
             directorio.mkdir();
         }
+    }
+    
+    // Método auxiliar para obtener siempre la ruta correcta de la carpeta
+    private File obtenerCarpetaAsistencias() {
+        File directorio = new File(CARPETA_ASISTENCIAS);
+        if (!directorio.exists()) {
+            directorio.mkdir();
+        }
+        return directorio;
     }
 
     public LocalDate validarFecha(String textoFecha) {
@@ -46,7 +53,7 @@ public class ControladorSesion {
     
     public List<Object[]> cargarListaPresentes(String textoFecha) {
         LocalDate fechaSeleccionada = validarFecha(textoFecha);
-        File archivoDia = new File(CARPETA_ASISTENCIAS + "/asistencia_" + fechaSeleccionada + ".csv");
+        File archivoDia = new File(obtenerCarpetaAsistencias(), "asistencia_" + fechaSeleccionada + ".csv");
 
         List<Object[]> filas = new ArrayList<>();
 
@@ -95,7 +102,7 @@ public class ControladorSesion {
     //Guarda la asistencia actual en un archivo CSV específico para la fecha
     public void guardarAsistencia(String textoFecha, List<Object[]> datosTabla) {
         LocalDate fechaSeleccionada = validarFecha(textoFecha);
-        File archivoDia = new File(CARPETA_ASISTENCIAS + "/asistencia_" + fechaSeleccionada + ".csv");
+        File archivoDia = new File(obtenerCarpetaAsistencias(), "asistencia_" + fechaSeleccionada + ".csv");
 
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(archivoDia))) {
             bw.write("cedula;estudiante;presente;ausente;observacion");

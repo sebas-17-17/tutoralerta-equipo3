@@ -5,6 +5,7 @@ import controlador.ControladorSesion;
 import java.awt.Color;
 import java.awt.Font;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -252,36 +253,59 @@ public class vistaRegistroAsistencia extends javax.swing.JFrame {
     }//GEN-LAST:event_btnMarcarTodosActionPerformed
 
     private void btnGuardarAsistenciaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarAsistenciaActionPerformed
-        String fecha = txtFecha.getText().trim();
-        if (fecha.isEmpty()) {
-            JOptionPane.showMessageDialog(
-                this, 
-                "Por favor ingrese una fecha válida (AAAA-MM-DD).",
-                "Validación",
-                JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-        DefaultTableModel modeloTabla = (DefaultTableModel) tblAsistencia.getModel();
-        if (modeloTabla.getRowCount() == 0) {
-            JOptionPane.showMessageDialog(
-                this,
-                "Primero cargue la lista de estudiantes.",
-                "Tabla vacía",
-                JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-        int presentes = 0;
-        for (int i = 0; i < modeloTabla.getRowCount(); i++) {
-            Boolean estaPresente = (Boolean) modeloTabla.getValueAt(i, 2);
-            if (estaPresente != null && estaPresente) {
-                presentes++;
-            }
-        }
+    String fecha = txtFecha.getText().trim();
+    if (fecha.isEmpty()) {
+        JOptionPane.showMessageDialog(
+            this, 
+            "Por favor ingrese una fecha válida (AAAA-MM-DD).", 
+            "Validación", 
+            JOptionPane.WARNING_MESSAGE
+        );
+        return;
+    }
+    
+    DefaultTableModel modeloTabla = (DefaultTableModel) tblAsistencia.getModel();
+    if (modeloTabla.getRowCount() == 0) {
         JOptionPane.showMessageDialog(
             this,
-            "Asistencia registrada para la fecha " + fecha + ".\nTotal presentes: " + presentes + " de " + modeloTabla.getRowCount(),
+            "Primero cargue la lista de estudiantes.",
+            "Tabla vacía",
+            JOptionPane.WARNING_MESSAGE
+        );
+        return;
+    }
+
+    try {
+        // Extraemos los datos de la tabla en una lista de objetos (filas)
+        List<Object[]> datosTabla = new ArrayList<>();
+        for (int i = 0; i < modeloTabla.getRowCount(); i++) {
+            Object[] fila = new Object[] {
+                modeloTabla.getValueAt(i, 0), // Cédula
+                modeloTabla.getValueAt(i, 1), // Estudiante
+                modeloTabla.getValueAt(i, 2), // Presente (Boolean)
+                modeloTabla.getValueAt(i, 3), // Ausente (Boolean)
+                modeloTabla.getValueAt(i, 4)  // Observación
+            };
+            datosTabla.add(fila);
+        }
+
+        controladorSesion.guardarAsistencia(fecha, datosTabla);
+
+        JOptionPane.showMessageDialog(
+            this,
+            "¡Archivo CSV de asistencia generado con éxito para la fecha " + fecha + "!",
             "Registro Exitoso",
-            JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.INFORMATION_MESSAGE
+        );
+        
+    } catch (Exception ex) {
+        JOptionPane.showMessageDialog(
+            this,
+            "Error al generar el CSV: " + ex.getMessage(),
+            "Error",
+            JOptionPane.ERROR_MESSAGE
+        );
+    }
     }//GEN-LAST:event_btnGuardarAsistenciaActionPerformed
 
     /**
