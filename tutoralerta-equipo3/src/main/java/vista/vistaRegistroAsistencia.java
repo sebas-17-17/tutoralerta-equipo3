@@ -52,6 +52,16 @@ public class vistaRegistroAsistencia extends javax.swing.JFrame {
                         if (Boolean.TRUE.equals(modelo.getValueAt(row, columnaContraria))) {
                             modelo.setValueAt(false, row, columnaContraria);
                         }
+                    }else if (Boolean.FALSE.equals(valor) && col == 3) {
+                        Object[] fila = new Object[]{
+                            modelo.getValueAt(row, 0),
+                            modelo.getValueAt(row, 1),
+                            modelo.getValueAt(row, 2),
+                            modelo.getValueAt(row, 3),
+                            modelo.getValueAt(row, 4)};
+                        controladorSesion.desmarcarAusente(fila);
+                        modelo.setValueAt(fila[2], row, 2);
+                        modelo.setValueAt(fila[4], row, 4);
                     }
                 }
             }
@@ -252,8 +262,18 @@ public class vistaRegistroAsistencia extends javax.swing.JFrame {
 
     private void btnMarcarTodosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMarcarTodosActionPerformed
         DefaultTableModel modeloTabla = (DefaultTableModel) tblAsistencia.getModel();
-        for (int i = 0; i < modeloTabla.getRowCount(); i++) {
-            modeloTabla.setValueAt(true, i, 2);
+        for (int fila = 0; fila < modeloTabla.getRowCount(); fila++) {
+            Object[] registro = new Object[]{
+                modeloTabla.getValueAt(fila, 0),
+                modeloTabla.getValueAt(fila, 1),
+                modeloTabla.getValueAt(fila, 2),
+                modeloTabla.getValueAt(fila, 3),
+                modeloTabla.getValueAt(fila, 4)
+            };
+            controladorSesion.desmarcarAusente(registro);
+            modeloTabla.setValueAt(registro[2], fila, 2);
+            modeloTabla.setValueAt(registro[3], fila, 3);
+            modeloTabla.setValueAt(registro[4], fila, 4);
         }
     }//GEN-LAST:event_btnMarcarTodosActionPerformed
 
@@ -291,15 +311,14 @@ public class vistaRegistroAsistencia extends javax.swing.JFrame {
                    return;
                }
            }
-           // Extraemos los datos de la tabla en una lista de objetos (filas)
            List<Object[]> datosTabla = new ArrayList<>();
            for (int i = 0; i < modeloTabla.getRowCount(); i++) {
                Object[] fila = new Object[] {
-                   modeloTabla.getValueAt(i, 0), // Cédula
-                   modeloTabla.getValueAt(i, 1), // Estudiante
-                   modeloTabla.getValueAt(i, 2), // Presente (Boolean)
-                   modeloTabla.getValueAt(i, 3), // Ausente (Boolean)
-                   modeloTabla.getValueAt(i, 4)  // Observación
+                   modeloTabla.getValueAt(i, 0), //Cédula
+                   modeloTabla.getValueAt(i, 1), //Estudiante
+                   modeloTabla.getValueAt(i, 2), //Presente (Boolean)
+                   modeloTabla.getValueAt(i, 3), //Ausente (Boolean)
+                   modeloTabla.getValueAt(i, 4)  //Observación
                };
                datosTabla.add(fila);
            }

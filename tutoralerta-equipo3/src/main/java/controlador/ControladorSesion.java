@@ -101,7 +101,14 @@ public class ControladorSesion {
         }
         return filas;
     }
-
+    
+    public void desmarcarAusente(Object[] filaEstudiante) {
+        if (filaEstudiante != null && filaEstudiante.length >= 5) {
+            filaEstudiante[2] = true;  //Presente
+            filaEstudiante[3] = false; //Ausente
+            filaEstudiante[4] = "";    //Limpia observación
+        }
+    }
 
     //Guarda la asistencia actual en un archivo CSV específico para la fecha
     public void guardarAsistencia(String textoFecha, List<Object[]> datosTabla) {
