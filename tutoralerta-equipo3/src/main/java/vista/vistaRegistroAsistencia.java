@@ -152,10 +152,7 @@ public class vistaRegistroAsistencia extends javax.swing.JFrame {
 
         tblAsistencia.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
+
             },
             new String [] {
                 "Cédula", "Estudiante", "Presente", "Ausente", "Observación"

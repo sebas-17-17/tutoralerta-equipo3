@@ -45,6 +45,11 @@ public class vistaMenuPrincipal extends javax.swing.JFrame {
             vistaRegistroAsistencia ventanaAsistencia = new vistaRegistroAsistencia(this.controlador);
             ventanaAsistencia.setVisible(true);
         });
+        
+        btnNotas.addActionListener(e -> {
+            vistaRegistroNotas ventanaNotas = new vistaRegistroNotas(this.controlador);
+            ventanaNotas.setVisible(true);
+        });
     }
     
     
