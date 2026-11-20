@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
@@ -20,14 +21,12 @@ public class ControladorSesion {
     public ControladorSesion(ControladorEstudiante controladorEstudiante) {
         this.controladorEstudiante = controladorEstudiante;
         
-        // Verificamos si estamos corriendo dentro de "dist" o si debemos asegurar la ruta local
         File directorio = new File(CARPETA_ASISTENCIAS);
         if (!directorio.exists()) {
             directorio.mkdir();
         }
     }
     
-    // Método auxiliar para obtener siempre la ruta correcta de la carpeta
     private File obtenerCarpetaAsistencias() {
         File directorio = new File(CARPETA_ASISTENCIAS);
         if (!directorio.exists()) {
@@ -71,7 +70,7 @@ public class ControladorSesion {
                         esPrimeraLinea = false;
                         continue;
                     }
-                    String[] partes = linea.split(";");
+                    String[] partes = linea.split(";",-1);
                     if (partes.length >= 5) {
                         filas.add(new Object[]{
                             partes[0], 
@@ -115,10 +114,10 @@ public class ControladorSesion {
         LocalDate fechaSeleccionada = validarFecha(textoFecha);
         File archivoDia = new File(obtenerCarpetaAsistencias(), "asistencia_" + fechaSeleccionada + ".csv");
 
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(archivoDia))) {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(archivoDia, StandardCharsets.UTF_8))) {
+            bw.write('\uFEFF'); // para que Excel abra el csv con tildes correctamente
             bw.write("cedula;estudiante;presente;ausente;observacion");
             bw.newLine();
-
             for (Object[] fila : datosTabla) {
                 String cedula = String.valueOf(fila[0]);
                 String estudiante = String.valueOf(fila[1]);
@@ -126,7 +125,6 @@ public class ControladorSesion {
                 boolean ausente = (Boolean) fila[3];
                 Object obsObj = fila[4];
                 String observacion = (obsObj != null) ? String.valueOf(obsObj) : "";
-
                 bw.write(cedula + ";" + estudiante + ";" + presente + ";" + ausente + ";" + observacion);
                 bw.newLine();
             }
