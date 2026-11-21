@@ -6,7 +6,9 @@ package vista;
 
 import controlador.ControladorEstudiante;
 import controlador.ControladorNota;
-
+import controlador.ControladorEstudiante;
+import controlador.ControladorNota;
+import java.time.LocalDate;
 /**
  *
  * @author Master
@@ -25,6 +27,8 @@ public class vistaRegistroNotas extends javax.swing.JFrame {
         this.controlador = controlador;
         this.controladorNota = new ControladorNota(controlador);
         initComponents();
+        jTextField1.setText(LocalDate.now().toString());
+        jTextField1.setEditable(true);
         setResizable(false);
         setLocationRelativeTo(null);
         getContentPane().setBackground(java.awt.Color.WHITE);
