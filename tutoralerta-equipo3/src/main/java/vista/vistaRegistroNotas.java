@@ -5,6 +5,7 @@
 package vista;
 
 import controlador.ControladorEstudiante;
+import controlador.ControladorNota;
 
 /**
  *
@@ -14,6 +15,7 @@ public class vistaRegistroNotas extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(vistaRegistroNotas.class.getName());
     private final ControladorEstudiante controlador;
+    private final ControladorNota controladorNota;
 
     public vistaRegistroNotas() {
         this(new ControladorEstudiante());
@@ -21,6 +23,7 @@ public class vistaRegistroNotas extends javax.swing.JFrame {
     
     public vistaRegistroNotas(ControladorEstudiante controlador) {
         this.controlador = controlador;
+        this.controladorNota = new ControladorNota(controlador);
         initComponents();
         setResizable(false);
         setLocationRelativeTo(null);
@@ -189,8 +192,34 @@ public class vistaRegistroNotas extends javax.swing.JFrame {
     }//GEN-LAST:event_jTextField1ActionPerformed
 
     private void btnCargarListaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCargarListaActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnCargarListaActionPerformed
+try {
+            String evaluacion = jTextField2.getText();
+            String fecha = jTextField1.getText();
+
+            java.util.List<Object[]> filas = controladorNota.obtenerListaEstudiantesNotas(evaluacion, fecha);
+            javax.swing.table.DefaultTableModel modeloTabla = (javax.swing.table.DefaultTableModel) tblNotas.getModel();
+            modeloTabla.setRowCount(0);
+
+            for (Object[] fila : filas) {
+                modeloTabla.addRow(fila);
+            }
+
+            if (filas.isEmpty()) {
+                javax.swing.JOptionPane.showMessageDialog(
+                    this,
+                    "No hay estudiantes registrados para cargar.",
+                    "Lista vacía",
+                    javax.swing.JOptionPane.INFORMATION_MESSAGE
+                );
+            }
+        } catch (IllegalArgumentException ex) {
+            javax.swing.JOptionPane.showMessageDialog(
+                this,
+                ex.getMessage(),
+                "Validación",
+                javax.swing.JOptionPane.WARNING_MESSAGE
+            );
+        }    }//GEN-LAST:event_btnCargarListaActionPerformed
 
     private void btnGuardarNotasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarNotasActionPerformed
         // TODO add your handling code here:
