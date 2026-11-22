@@ -13,6 +13,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ControladorNota {
+    
+    private static final double NOTA_MIN = 0.0;
+    private static final double NOTA_MAX = 20.0;
     private final ControladorEstudiante controladorEstudiante;
 
     public ControladorNota(ControladorEstudiante controladorEstudiante) {
@@ -89,4 +92,52 @@ public class ControladorNota {
 
         return filas;
     }
+    
+    public double validarCalificacion(Object valorCelda, String nombreEstudiante) {
+    if (valorCelda == null || valorCelda.toString().trim().isEmpty()) {
+        throw new IllegalArgumentException(
+            "La calificación de " + nombreEstudiante + " no puede estar vacía."
+        );
+    }
+
+    String texto = valorCelda.toString().trim().replace(',', '.');
+
+    // Validar que sea número positivo con máximo 2 decimales (sin letras ni negativos)
+    if (!texto.matches("\\d+(\\.\\d{1,2})?")) {
+        throw new IllegalArgumentException(
+            "Calificación inválida para " + nombreEstudiante + ": '" + texto + "'.\n" +
+            "Ingrese un número positivo con hasta dos decimales (ej. 8.50)."
+        );
+    }
+
+    double nota = Double.parseDouble(texto);
+    if (nota < NOTA_MIN || nota > NOTA_MAX) {
+        throw new IllegalArgumentException(
+            "Calificación fuera de rango para " + nombreEstudiante + ": " + nota + ".\n" +
+            "Debe estar entre " + NOTA_MIN + " y " + NOTA_MAX + "."
+        );
+    }
+
+    return nota;
+    }
+    
+    public List<Nota> validarYConstruirNotas(String nombreEvaluacion, String textoFecha, List<Object[]> filasTabla) {
+    String evalLimpia = validarNombreEvaluacion(nombreEvaluacion);
+    validarFecha(textoFecha);
+
+    if (filasTabla == null || filasTabla.isEmpty()) {
+        throw new IllegalArgumentException("Primero cargue la lista de estudiantes.");
+    }
+
+    List<Nota> notasValidas = new ArrayList<>();
+    for (Object[] fila : filasTabla) {
+        String cedula = String.valueOf(fila[0]).trim();
+        String estudiante = String.valueOf(fila[1]).trim();
+        double calificacion = validarCalificacion(fila[2], estudiante);
+        notasValidas.add(new Nota(cedula, evalLimpia, calificacion));
+    }
+    return notasValidas;
+    }
+    
+    
 }

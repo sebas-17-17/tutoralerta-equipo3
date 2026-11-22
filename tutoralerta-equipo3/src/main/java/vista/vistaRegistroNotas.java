@@ -226,7 +226,57 @@ try {
         }    }//GEN-LAST:event_btnCargarListaActionPerformed
 
     private void btnGuardarNotasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarNotasActionPerformed
-        // TODO add your handling code here:
+        // 1. Confirmar si una celda sigue en modo edición
+    if (tblNotas.isEditing()) {
+        tblNotas.getCellEditor().stopCellEditing();
+    }
+
+    javax.swing.table.DefaultTableModel modeloTabla =
+            (javax.swing.table.DefaultTableModel) tblNotas.getModel();
+
+    if (modeloTabla.getRowCount() == 0) {
+        javax.swing.JOptionPane.showMessageDialog(
+                this,
+                "Primero cargue la lista de estudiantes.",
+                "Tabla vacía",
+                javax.swing.JOptionPane.WARNING_MESSAGE
+        );
+        return;
+    }
+
+    // 2. Recolectar filas de la tabla
+    java.util.List<Object[]> filasTabla = new java.util.ArrayList<>();
+    for (int i = 0; i < modeloTabla.getRowCount(); i++) {
+        filasTabla.add(new Object[]{
+            modeloTabla.getValueAt(i, 0), // Cédula
+            modeloTabla.getValueAt(i, 1), // Estudiante
+            modeloTabla.getValueAt(i, 2)  // Calificación
+        });
+    }
+
+    // 3. Validar notas y dejar lista la lista de Nota para guardar en notas.csv
+    try {
+        String evaluacion = jTextField2.getText();
+        String fecha = jTextField1.getText();
+
+        java.util.List<modelo.Nota> notasValidadas =
+                controladorNota.validarYConstruirNotas(evaluacion, fecha, filasTabla);
+
+        // (Jorge - HU-B3 Guardar en notas.csv): controladorNota.guardarNotas(notasValidadas);
+        javax.swing.JOptionPane.showMessageDialog(
+                this,
+                "Validación exitosa: " + notasValidadas.size() + " calificaciones válidas listas para guardar.",
+                "Validación correcta",
+                javax.swing.JOptionPane.INFORMATION_MESSAGE
+        );
+    } catch (IllegalArgumentException ex) {
+        javax.swing.JOptionPane.showMessageDialog(
+                this,
+                ex.getMessage(),
+                "Nota inválida",
+                javax.swing.JOptionPane.WARNING_MESSAGE
+        );
+    }
     }//GEN-LAST:event_btnGuardarNotasActionPerformed
 
     private void btnVolverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVolverActionPerformed

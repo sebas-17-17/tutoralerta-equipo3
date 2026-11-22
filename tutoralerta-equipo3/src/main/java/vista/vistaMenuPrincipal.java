@@ -21,6 +21,7 @@ public class vistaMenuPrincipal extends javax.swing.JFrame {
     public JButton btnEstudiantes;
     public JButton btnAsistencia;
     public JButton btnNotas;
+    public JButton btnSalir;
     
     private final ControladorEstudiante controlador;
 
@@ -49,6 +50,19 @@ public class vistaMenuPrincipal extends javax.swing.JFrame {
         btnNotas.addActionListener(e -> {
             vistaRegistroNotas ventanaNotas = new vistaRegistroNotas(this.controlador);
             ventanaNotas.setVisible(true);
+        });
+        
+        btnSalir.addActionListener(e -> {
+            int opcion = javax.swing.JOptionPane.showConfirmDialog(
+                    this,
+                    "¿Está seguro/a que desea salir de TutorAlerta?",
+                    "Confirmar salida",
+                    javax.swing.JOptionPane.YES_NO_OPTION,
+                    javax.swing.JOptionPane.QUESTION_MESSAGE
+            );
+            if (opcion == javax.swing.JOptionPane.YES_OPTION) {
+                System.exit(0);
+            }
         });
     }
     
@@ -82,16 +96,19 @@ public class vistaMenuPrincipal extends javax.swing.JFrame {
         panelEncabezado.add(lblSubtitulo);
 
        
-        JPanel panelBotones = new JPanel(new GridLayout(3, 1, 0, 14));
+        JPanel panelBotones = new JPanel(new GridLayout(4, 1, 0, 12));
         panelBotones.setOpaque(false);
-
+        
         btnEstudiantes = crearBoton("Registrar Estudiantes", new Color(37, 99, 235));
         btnAsistencia = crearBoton("Tomar Asistencia", new Color(13, 148, 136));
         btnNotas = crearBoton("Registrar Notas", new Color(79, 70, 229));
+        btnSalir = crearBoton("Salir", new Color(225, 29, 72));
+
 
         panelBotones.add(btnEstudiantes);
         panelBotones.add(btnAsistencia);
         panelBotones.add(btnNotas);
+        panelBotones.add(btnSalir);
 
         
         JLabel lblPie = new JLabel("Seleccione una opción para continuar", SwingConstants.CENTER);
@@ -104,7 +121,7 @@ public class vistaMenuPrincipal extends javax.swing.JFrame {
 
         getContentPane().add(panelFondo, BorderLayout.CENTER);
 
-        setSize(450, 390);
+        setSize(450, 445);
         setLocationRelativeTo(null); // Centra la ventana en pantalla
     }
     
