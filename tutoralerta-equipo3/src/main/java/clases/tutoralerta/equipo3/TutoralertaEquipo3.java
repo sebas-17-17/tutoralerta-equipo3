@@ -6,7 +6,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import javax.swing.SwingUtilities;
 import lectura.FuenteDatos;
-import lectura.LectorEstudiantesCsv;
+import lectura.LectoresCsv.LectorEstudiantesCsv;
 import modelo.Estudiante;
 import vista.vistaMenuPrincipal;
 

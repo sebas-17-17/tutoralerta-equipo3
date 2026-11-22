@@ -6,6 +6,11 @@ import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 import modelo.Estudiante;
+import lectura.LectoresCsv.LectorNotasCsv;
+import modelo.Nota;
+import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ControladorNota {
     private final ControladorEstudiante controladorEstudiante;
@@ -32,20 +37,56 @@ public class ControladorNota {
         }
     }
 
-    public List<Object[]> obtenerListaEstudiantesNotas(String nombreEvaluacion, String textoFecha) {
+    
+
+    public List<Object[]> obtenerListaEstudiantesNotas(
+            String nombreEvaluacion, String textoFecha) {
+
         validarNombreEvaluacion(nombreEvaluacion);
         validarFecha(textoFecha);
 
         List<Object[]> filas = new ArrayList<>();
-        List<Estudiante> estudiantes = controladorEstudiante.ordenPorApellido();
 
+        // Leer las notas registradas
+        LectorNotasCsv lector = new LectorNotasCsv(
+                Paths.get("notas.csv")
+        );
+
+        List<Nota> notasGuardadas = lector.leer();
+
+        // Buscar las calificaciones de esta evaluación
+        Map<String, String> calificaciones = new HashMap<>();
+
+        for (Nota nota : notasGuardadas) {
+
+            if (nota.nombreEvaluacion().equalsIgnoreCase(
+                    nombreEvaluacion.trim())) {
+
+                calificaciones.put(
+                        nota.cedulaEstudiante(),
+                        String.valueOf(nota.calificacion())
+                );
+            }
+        }
+
+        // Obtener estudiantes registrados
+        List<Estudiante> estudiantes =
+                controladorEstudiante.ordenPorApellido();
+
+        // Construir las filas de la tabla
         for (Estudiante est : estudiantes) {
+
+            String calificacion = calificaciones.getOrDefault(
+                    est.cedula(), ""
+            );
+
             filas.add(new Object[]{
                 est.cedula(),
                 est.apellidos() + " " + est.nombres(),
-                "" 
+                calificacion
             });
         }
+
         return filas;
     }
 }

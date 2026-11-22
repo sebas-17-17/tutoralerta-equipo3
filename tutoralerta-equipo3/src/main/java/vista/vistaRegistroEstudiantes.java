@@ -14,7 +14,7 @@ public class vistaRegistroEstudiantes extends javax.swing.JFrame {
     public vistaRegistroEstudiantes() {
         this(new ControladorEstudiante());
         this.controlador.cargarDatosIniciales(
-            new lectura.LectorEstudiantesCsv(java.nio.file.Path.of("datos", "recursos", "estudiantes.csv"))
+            new lectura.LectoresCsv.LectorEstudiantesCsv(java.nio.file.Path.of("datos", "recursos", "estudiantes.csv"))
         );
         actualizarTabla();
     }
