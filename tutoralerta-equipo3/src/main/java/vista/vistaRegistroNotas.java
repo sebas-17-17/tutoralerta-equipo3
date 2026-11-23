@@ -255,26 +255,33 @@ try {
     }
 
     // 3. Validar notas y dejar lista la lista de Nota para guardar en notas.csv
-    try {
+    try{
         String evaluacion = jTextField2.getText();
         String fecha = jTextField1.getText();
 
         java.util.List<modelo.Nota> notasValidadas =
-                controladorNota.validarYConstruirNotas(evaluacion, fecha, filasTabla);
+            controladorNota.validarYConstruirNotas(evaluacion, fecha, filasTabla);
 
-        // (Jorge - HU-B3 Guardar en notas.csv): controladorNota.guardarNotas(notasValidadas);
+        controladorNota.guardarNotas(notasValidadas, fecha);
         javax.swing.JOptionPane.showMessageDialog(
-                this,
-                "Validación exitosa: " + notasValidadas.size() + " calificaciones válidas listas para guardar.",
-                "Validación correcta",
-                javax.swing.JOptionPane.INFORMATION_MESSAGE
+            this,
+           "Notas guardadas en notas.csv.",
+            "Guardado",
+            javax.swing.JOptionPane.INFORMATION_MESSAGE
         );
-    } catch (IllegalArgumentException ex) {
+    } catch (IllegalArgumentException ex){
+        javax.swing.JOptionPane.showMessageDialog(
+            this,
+            ex.getMessage(),
+            "Nota inválida",
+            javax.swing.JOptionPane.WARNING_MESSAGE
+        );
+    } catch (Exception ex){
         javax.swing.JOptionPane.showMessageDialog(
                 this,
-                ex.getMessage(),
-                "Nota inválida",
-                javax.swing.JOptionPane.WARNING_MESSAGE
+                "Error al guardar: " + ex.getMessage(),
+                "Error",
+                javax.swing.JOptionPane.ERROR_MESSAGE
         );
     }
     }//GEN-LAST:event_btnGuardarNotasActionPerformed
