@@ -16,7 +16,7 @@ import modelo.Estudiante;
 public class ControladorSesion {
 
     private final ControladorEstudiante controladorEstudiante;
-    private static final String CARPETA_ASISTENCIAS = "asistencias"; // Se creará dentro de dist/ al lado del jar
+    private static final String CARPETA_ASISTENCIAS = "asistencias"; 
 
     public ControladorSesion(ControladorEstudiante controladorEstudiante) {
         this.controladorEstudiante = controladorEstudiante;
@@ -115,7 +115,7 @@ public class ControladorSesion {
         File archivoDia = new File(obtenerCarpetaAsistencias(), "asistencia_" + fechaSeleccionada + ".csv");
 
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(archivoDia, StandardCharsets.UTF_8))) {
-            bw.write('\uFEFF'); // para que Excel abra el csv con tildes correctamente
+            bw.write('\uFEFF'); 
             bw.write("cedula;estudiante;presente;ausente;observacion");
             bw.newLine();
             for (Object[] fila : datosTabla) {

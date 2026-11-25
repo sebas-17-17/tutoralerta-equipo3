@@ -59,9 +59,7 @@ public class ControladorEstudiante {
     }
 
     public void guardarEnCsv() {
-        String rutaArchivo = new File("estudiantes.csv").exists()
-        ? "estudiantes.csv"
-        : "datos/recursos/estudiantes.csv";
+        String rutaArchivo = "estudiantes.csv";
         try (PrintWriter pw = new PrintWriter(new File(rutaArchivo))) {
             pw.println("cedula;nombres;apellidos;correo");
             for (Estudiante e : listaEstudiantes) {

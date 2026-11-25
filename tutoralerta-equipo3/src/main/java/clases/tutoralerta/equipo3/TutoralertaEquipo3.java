@@ -1,7 +1,6 @@
 package clases.tutoralerta.equipo3;
 
 import controlador.ControladorEstudiante;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import javax.swing.SwingUtilities;
@@ -13,9 +12,7 @@ import vista.vistaMenuPrincipal;
 public class TutoralertaEquipo3 {
 
     public static void main(String[] args) {
-        Path rutaCsv = Files.exists(Paths.get("estudiantes.csv"))
-                ? Paths.get("estudiantes.csv")
-                : Paths.get("datos/recursos/estudiantes.csv");
+        Path rutaCsv = Paths.get("estudiantes.csv");
 
         FuenteDatos<Estudiante> lectorEstudiantes = new LectorEstudiantesCsv(rutaCsv);
 

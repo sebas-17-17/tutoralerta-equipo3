@@ -14,7 +14,7 @@ public class vistaRegistroEstudiantes extends javax.swing.JFrame {
     public vistaRegistroEstudiantes() {
         this(new ControladorEstudiante());
         this.controlador.cargarDatosIniciales(
-            new lectura.LectoresCsv.LectorEstudiantesCsv(java.nio.file.Path.of("datos", "recursos", "estudiantes.csv"))
+            new lectura.LectoresCsv.LectorEstudiantesCsv(java.nio.file.Path.of("estudiantes.csv"))
         );
         actualizarTabla();
     }
@@ -445,22 +445,22 @@ public class vistaRegistroEstudiantes extends javax.swing.JFrame {
         "Ningún estudiante seleccionado",
         javax.swing.JOptionPane.WARNING_MESSAGE);
     return;
-}
-
-String cedula = txtCedula.getText();
-String nombres = txtNombres.getText();
-String apellidos = txtApellidos.getText();
-String correo = txtCorreo.getText();
-
-if (nombres.equals("") || apellidos.equals("") || correo.equals("")) {
-    javax.swing.JOptionPane.showMessageDialog(this,
-        "Error: No puede dejar nombres, apellidos o correo vacíos.",
-        "Campos obligatorios",
-        javax.swing.JOptionPane.WARNING_MESSAGE);
-    return;
-}
-
-boolean actualizado = controlador.actualizarEstudiante(cedula, nombres, apellidos, correo);
+        }
+        
+        String cedula = txtCedula.getText();
+        String nombres = txtNombres.getText();
+        String apellidos = txtApellidos.getText();
+        String correo = txtCorreo.getText();
+        
+        if(nombres.equals("") || apellidos.equals("") || correo.equals("")) {
+            javax.swing.JOptionPane.showMessageDialog(this,
+                    "Error: No puede dejar nombres, apellidos o correo vacíos.",
+                    "Campos obligatorios",
+                    javax.swing.JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        
+        boolean actualizado = controlador.actualizarEstudiante(cedula, nombres, apellidos, correo);
         if (actualizado) {
             actualizarTabla();
             limpiarCampos();
